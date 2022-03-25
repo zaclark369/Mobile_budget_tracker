@@ -1,4 +1,6 @@
-const CACHE_NAME = "Mobile_budget_tracker";
+const APP_PREFIX = 'MobileBudget-';     
+const VERSION = 'version_01';
+const CACHE_NAME = APP_PREFIX + VERSION
 const FILES_TO_CACHE = ['./index.html', './css/styles.css', './js/index.js'];
 
 
@@ -12,21 +14,25 @@ self.addEventListener("install", function (evt) {
   self.skipWaiting();
 });
 
-self.addEventListener("activate", function (evt) {
+self.addEventListener('activate', function (evt) {
   evt.waitUntil(
-    caches.keys().then((keyList) => {
-      return Promise.all(
-        keyList.map((key) => {
-          if (key !== CACHE_NAME && key !== DATA_CACHE_NAME) {
-            console.log("Remover old cache data", key);
-            return caches.delete(key);
-          }
-        })
-      );
+    caches.keys().then(function (keyList) {
+      // `keyList` contains all cache names under your username.github.io
+      // filter out ones that has this app prefix to create keeplist
+      let cacheKeeplist = keyList.filter(function (key) {
+        return key.indexOf(APP_PREFIX);
+      })
+      // add current cache name to keeplist
+      cacheKeeplist.push(CACHE_NAME);
+
+      return Promise.all(keyList.map(function (key, i) {
+        if (cacheKeeplist.indexOf(key) === -1) {
+          console.log('deleting cache : ' + keyList[i] );
+          return caches.delete(keyList[i]);
+        }
+      }));
     })
   );
-
-  self.clients.claim();
 });
 
 
