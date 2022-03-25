@@ -24,6 +24,8 @@ This is a simple budgeting app that is focussed on PWA usability. It uses Indexe
 - `git clone ` application to your local machine.
 - `npm i `
 - `npm start`
+
+- Live server can be found at https://powerful-refuge-13932.herokuapp.com/
   
 
 ## Usage
